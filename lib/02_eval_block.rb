@@ -45,3 +45,15 @@
 # eval_block(1, 2, 3)
 # # => "NO BLOCK GIVEN"
 # ```
+
+def eval_block (*args)    
+    yield(*args)
+end
+
+# def eval_block(*args, &prc)
+#     if prc.nil?
+#       raise "NO BLOCK GIVEN!"
+#     else
+#       prc.call(*args)
+#     end
+#   end

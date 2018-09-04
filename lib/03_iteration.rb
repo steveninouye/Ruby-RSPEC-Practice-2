@@ -4,6 +4,7 @@
 # factors of a given number.
 
 def factors(num)
+  (1..num).to_a.select {|el| num % el == 0}
 end
 
 # ### Bubble Sort

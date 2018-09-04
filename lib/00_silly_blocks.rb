@@ -6,6 +6,6 @@ def adder (num=1)
     yield + num
 end
 
-def repeater (num = 1, &bloc)
-    num.times {bloc.call}
+def repeater (num = 1, &prc)
+    num.times {prc.call}
 end

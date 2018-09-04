@@ -11,7 +11,7 @@
 # took to run.
 
 require "01_performance_monitor"
-
+require "byebug"
 require "time"  # loads up the Time.parse method -- do NOT create time.rb!
 
 describe "Performance Monitor" do
