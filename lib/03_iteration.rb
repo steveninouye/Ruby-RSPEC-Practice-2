@@ -47,10 +47,46 @@ end
 # http://stackoverflow.com/questions/827649/what-is-the-ruby-spaceship-operator
 
 class Array
-  def bubble_sort!
+  def bubble_sort! (&prc)
+
+    # if prc does not exist create a new Proc
+    prc ||= Proc.new {|x,y| x <=> y}
+
+    # initial values
+    swaps = 0
+    idx = 0
+
+    while swaps
+
+      break if self.length < 2   # don't continue if length is less than 2
+
+      # keep checking if index can swap until the 2nd to last index
+      while idx < self.length - 1     
+
+        # swap the 2 indexes and increase 'swaps' if next index is less
+        if (prc.call(self[idx], self[idx + 1]) > 0)
+          self[idx],self[idx + 1] = self[idx + 1], self[idx] 
+          swaps += 1
+        end
+      
+      # increment index to check the next index
+      idx += 1
+      end
+
+      # if there are no swaps step out of the loop
+      break if swaps == 0
+
+      # if continuing make swaps and idx equal 0
+      swaps = 0
+      idx = 0
+    end
+    self
   end
 
+
+
   def bubble_sort(&prc)
+    self.dup.bubble_sort!(&prc)
   end
 end
 
@@ -68,9 +104,23 @@ end
 # words).
 
 def substrings(string)
+  result = []
+  ltrs = string.chars
+  ltrs.each_with_index do |ltr, idx|
+    last_idx = idx
+    while last_idx < ltrs.length
+      result.push(ltrs[idx..last_idx].join(""))
+      last_idx += 1
+    end
+  end
+  result
 end
 
 def subwords(word, dictionary)
+  words = substrings(word).select do |str| 
+    dictionary.include?(str)
+  end
+  words.uniq
 end
 
 # ### Doubler
@@ -78,6 +128,7 @@ end
 # array with the original elements multiplied by two.
 
 def doubler(array)
+  array.map{|el| el * 2}
 end
 
 # ### My Each
@@ -105,6 +156,12 @@ end
 
 class Array
   def my_each(&prc)
+    num = self.length
+    num.times do |x|
+      el = self[x]
+      prc.call(el)
+    end
+    self
   end
 end
 
@@ -123,12 +180,22 @@ end
 
 class Array
   def my_map(&prc)
+    arr = []
+    # self.each{|el| arr.push(yield(el))}
+    my_each { |el| arr.push(prc.call(el))}
+    arr
   end
 
   def my_select(&prc)
+    arr = []
+    my_each{|el| arr.push(el) if proc.call(el)}
+    arr
   end
 
   def my_inject(&blk)
+    num = self[0]
+    self[1..-1].my_each {|el| num = yield(num, el)}
+    num
   end
 end
 
@@ -142,4 +209,5 @@ end
 # ```
 
 def concatenate(strings)
+  strings.inject{|acc, curr| acc + curr}
 end
